@@ -78,10 +78,26 @@ public class Main {
             Units.toEMU(width * scaling), Units.toEMU(height * scaling));
     in.close();
 
-    run = paragraph.createRun();
-    run.addBreak(BreakType.PAGE);
-    run.addBreak(BreakType.TEXT_WRAPPING);
-    run.setText("Main Text babli bubli adlkasj;la doai;sjd as;dj asl;djas ldjald jaslj\n");
+
+//    textbox
+//    CTGroup ctGroup = CTGroup.Factory.newInstance();
+//    CTShape ctShape = ctGroup.addNewShape();
+//    ctShape.setStyle("width:300pt;height:100pt");
+//    CTTxbxContent ctTxbxContent = ctShape.addNewTextbox().addNewTxbxContent();
+//    ctTxbxContent.addNewP().addNewR().addNewT().setStringValue("The TextBox text...");
+//    Node ctGroupNode = ctGroup.getDomNode();
+//    CTPicture ctPicture = CTPicture.Factory.parse(ctGroupNode);
+//    run=paragraph.createRun();
+//    CTR cTR = run.getCTR();
+//    cTR.addNewPict();
+//    cTR.setPictArray(0, ctPicture);
+//    *************
+
+
+//    run = paragraph.createRun();
+//    run.addBreak(BreakType.PAGE);
+//    run.addBreak(BreakType.TEXT_WRAPPING);
+//    run.setText("Main Text babli bubli adlkasj;la doai;sjd as;dj asl;djas ldjald jaslj\n");
 
     // create footer start
     XWPFFooter footer = headerFooterPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT);
