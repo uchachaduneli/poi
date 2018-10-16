@@ -1,12 +1,13 @@
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
-
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigInteger;
 
 public class Main {
 
@@ -19,8 +20,32 @@ public class Main {
 
     //Blank Document
     XWPFDocument document = new XWPFDocument();
+
+    CTBody body = document.getDocument().getBody();
+    if (!body.isSetSectPr()) {
+      body.addNewSectPr();
+    }
+
+    CTSectPr section = body.getSectPr();
+    if (!section.isSetPgSz()) {
+      section.addNewPgSz();
+    }
+
+    CTPageSz pageSize = section.getPgSz();
+    pageSize.setOrient(STPageOrientation.LANDSCAPE);
+//A4 = 595x842 / multiply 20 since BigInteger represents 1/20 Point
+    pageSize.setW(BigInteger.valueOf(16840));
+    pageSize.setH(BigInteger.valueOf(11900));
+
+    CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+    CTPageMar pageMar = sectPr.addNewPgMar();
+    pageMar.setLeft(BigInteger.valueOf(0L));
+    pageMar.setTop(BigInteger.valueOf(0L));
+    pageMar.setRight(BigInteger.valueOf(0L));
+    pageMar.setBottom(BigInteger.valueOf(0L));
+
     //Write the Document in file system
-    FileOutputStream out = new FileOutputStream(new File("C:\\Users\\ucha.chaduneli\\Desktop\\myDoc.docx"));
+    FileOutputStream out = new FileOutputStream(new File("C:\\Users\\home\\Desktop\\myDoc.docx"));
 
     //create Paragraph
     XWPFParagraph paragraph = document.createParagraph();
@@ -35,21 +60,20 @@ public class Main {
     XWPFHeader header = headerFooterPolicy.createHeader(XWPFHeaderFooterPolicy.FIRST);
 
     headerParagraph = header.createParagraph();
-    headerParagraph.setAlignment(ParagraphAlignment.BOTH);
+    headerParagraph.setAlignment(ParagraphAlignment.CENTER);
 
     run = headerParagraph.createRun();
     run.setText("The Header:");
 
-    File imgFile = new File("C:\\Users\\ucha.chaduneli\\IdeaProjects\\poiDoc\\src\\main\\resources\\background.png");
-//    InputStream headerImg = new FileInputStream("C:\\Users\\ucha.chaduneli\\IdeaProjects\\poiDoc\\src\\main\\resources\\background.png");
-//    paragraph.createRun().addPicture(headerImg, Document.PICTURE_TYPE_PNG, "background.png", Units.toEMU(500), Units.toEMU(800));
+    File imgFile = new File("C:\\Users\\home\\IdeaProjects\\poi\\src\\main\\resources\\background.png");
     Dimension dim = getImageDimension(imgFile);
     double width = dim.getWidth();
     double height = dim.getHeight();
 
     double scaling = 1.0;
-    if (width > 80 * 7) scaling = (80 * 7) / width; //scale width not to be greater than 6 inches
+    if (width > 82 * 10.3) scaling = (82 * 10.3) / width; //scale width not to be greater than 6 inches
     InputStream in = new FileInputStream(imgFile);
+    paragraph.setAlignment(ParagraphAlignment.BOTH);
     paragraph.createRun().addPicture(in, Document.PICTURE_TYPE_PNG, "background.png",
             Units.toEMU(width * scaling), Units.toEMU(height * scaling));
     in.close();
@@ -74,7 +98,7 @@ public class Main {
     out.close();
     System.out.println("Doc Generated successfully");
     if (Desktop.isDesktopSupported()) {
-      Desktop.getDesktop().open(new File("C:\\Users\\ucha.chaduneli\\Desktop\\myDoc.docx"));
+      Desktop.getDesktop().open(new File("C:\\Users\\home\\Desktop\\myDoc.docx"));
     }
   }
 }
